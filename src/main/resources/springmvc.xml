@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       		http://www.springframework.org/schema/beans/spring-beans.xsd 
+       		http://www.springframework.org/schema/context 
+       		http://www.springframework.org/schema/context/spring-context.xsd 
+       		http://www.springframework.org/schema/tx 
+       		http://www.springframework.org/schema/tx/spring-tx.xsd
+       		http://www.springframework.org/schema/mvc
+       		http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!-- 配置扫描的包 -->
+    <context:component-scan base-package="com.run.controller"/>
+    <!-- 注册HandlerMapper、HandlerAdapter两个映射类 -->
+    <mvc:annotation-driven/>
+    <!-- 访问静态资源 (这个标签起作用的前提就是需要我们把静态资源放在webapp下，而非WEB-INF下，否则还是会无效)-->
+    <!--default-servlet-handler将在SpringMVC上下文中定义一个DefaultServletHttpRequestHandler,它会对进入DispatcherServlet的请求进行筛查。-->
+    <!--如果没有只有这个标签没有<mvc:annotation-driven/>时就会出现无法访问Controller中的@RequestMapping详解：https://blog.csdn.net/wu9333/article/details/70859860-->
+    <mvc:default-servlet-handler/>
+
+
+    <!-- 消息转换器 -->
+    <mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+
+            <!-- 字符串消息转换器 -->
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
+
+            <!-- json消息转换器 -->
+            <bean id="mappingJacksonHttpMessageConverter"
+                  class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="supportedMediaTypes" value="text/html;charset=UTF-8"/>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+
+    <!-- 视图解析器 Controller处理完毕后将会转发到相应位置 prefix前缀 suffi后缀 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/jsp/"></property>
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+
+    <!-- springMVC拦截器配置 -->
+    <!--<mvc:interceptors>-->
+        <!--&lt;!&ndash;对所有的请求记性拦截&ndash;&gt;-->
+        <!--&lt;!&ndash;<bean class="com.yx.interceptor.GlobalInterceptor"/>&ndash;&gt;-->
+        <!--&lt;!&ndash;对特定的请求进行拦截&ndash;&gt;-->
+        <!--&lt;!&ndash;使用bean定义一个Interceptor，直接定义在mvc:interceptors根下面的Interceptor将拦截所有的请求&ndash;&gt;-->
+        <!--&lt;!&ndash;<bean class="com.UserInterceptor"/>&ndash;&gt;-->
+        <!--<mvc:interceptor>-->
+            <!--<mvc:mapping path="/cardEdit/**"/>-->
+            <!--<mvc:mapping path="/user/**"/>-->
+            <!--<mvc:mapping path="/filePlateOperation/**"/>-->
+            <!--<mvc:mapping path="/blogsOperation/**"/>-->
+            <!--&lt;!&ndash;定义在mvc:interceptor下面的表示是对特定的请求才进行拦截的&ndash;&gt;-->
+            <!--&lt;!&ndash;<bean class="com.yx.interceptor.CardOperationInterceptor"/>&ndash;&gt;-->
+        <!--</mvc:interceptor>-->
+    <!--</mvc:interceptors>-->
+
+    <!-- SpringMVC上传文件时,需配置MultipartResolver处理器 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 指定所上传文件的总大小不能超过3G......注意maxUploadSize属性的限制不是针对单个文件,而是所有文件的容量之和 -->
+        <property name="maxUploadSize" value="3000000000"/>
+        <!-- 默认编码 -->
+        <property name="defaultEncoding" value="UTF-8"/>
+        <!-- 上传文件的解析 -->
+        <property name="resolveLazily" value="true"/>
+    </bean>
+</beans>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<!-- 打印查询语句 -->
+		<setting name="logImpl" value="STDOUT_LOGGING" />
+	</settings>
+
+	<!--&lt;!&ndash;标签作用是别名转换将com.yx.pojo.CommunityUser取User别名 在resultType或parameterType可直接写成User&ndash;&gt;-->
+	<!--<typeAliases>-->
+		<!--<typeAlias type="com.yx.pojo.CommunityUser" alias="User"/>-->
+		<!--&lt;!&ndash;添加这个可以扫描整合包下所有的类如果类名上有@Alias注解则使用注解指定的名称作为别名，如果没有则使用类名首字母小写作为别名&ndash;&gt;-->
+		<!--<package name="com.yx.pojo"></package>-->
+	<!--</typeAliases>-->
+
+	<plugins>
+		<!-- com.github.pagehelper为PageHelper类所在包名 -->
+		<plugin interceptor="com.github.pagehelper.PageHelper">
+			<!-- 设置数据库类型 Oracle,Mysql,MariaDB,SQLite,Hsqldb,PostgreSQL六种数据库 -->
+			<property name="dialect" value="mysql" />
+		</plugin>
+	</plugins>
+</configuration>
